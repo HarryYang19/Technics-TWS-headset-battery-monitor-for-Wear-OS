@@ -11,8 +11,8 @@ android {
         applicationId = "com.example.headsetbattery"
         minSdk = 33
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.1-az60"
+        versionCode = 4
+        versionName = "1.3-az60"
     }
 
     compileOptions {
@@ -23,7 +23,6 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.15.0")
-    implementation("androidx.wear:wear:1.3.0")
+    implementation("androidx.wear.watchface:watchface-complications-data:1.2.1")
     implementation("androidx.wear.watchface:watchface-complications-data-source:1.2.1")
 }

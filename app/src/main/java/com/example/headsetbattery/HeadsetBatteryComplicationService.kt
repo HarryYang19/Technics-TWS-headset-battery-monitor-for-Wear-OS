@@ -11,7 +11,7 @@ import androidx.wear.watchface.complications.datasource.ComplicationDataSourceSe
 import androidx.wear.watchface.complications.datasource.ComplicationRequest
 
 class HeadsetBatteryComplicationService : ComplicationDataSourceService() {
-    override fun getPreviewData(type: ComplicationType): ComplicationData {
+    override fun getPreviewData(type: ComplicationType): ComplicationData? {
         val previewText = PlainComplicationText.Builder("68%").build()
         return when (type) {
             ComplicationType.RANGED_VALUE -> RangedValueComplicationData.Builder(
@@ -30,20 +30,21 @@ class HeadsetBatteryComplicationService : ComplicationDataSourceService() {
         request: ComplicationRequest,
         listener: ComplicationDataSourceService.ComplicationRequestListener
     ) {
-        val battery = readBattery()
-        val data: ComplicationData = if (battery >= 0) {
-            val text = PlainComplicationText.Builder("$battery%").build()
+        val reading = readBattery()
+        val data: ComplicationData = if (reading != null) {
+            val text = PlainComplicationText.Builder("${reading.percent}%").build()
+            val title = PlainComplicationText.Builder(reading.label).build()
+            val description = PlainComplicationText.Builder("${reading.label}电量 ${reading.percent}%").build()
             when (request.complicationType) {
                 ComplicationType.RANGED_VALUE -> RangedValueComplicationData.Builder(
-                    battery.toFloat(), 0f, 100f, text
-                ).setTitle(PlainComplicationText.Builder("耳机").build()).build()
+                    reading.percent.toFloat(), 0f, 100f, description
+                ).setTitle(title).build()
                 ComplicationType.LONG_TEXT -> LongTextComplicationData.Builder(
-                    PlainComplicationText.Builder("耳机 $battery%").build(),
-                    PlainComplicationText.Builder("耳机电量").build()
+                    PlainComplicationText.Builder("${reading.label} ${reading.percent}%").build(),
+                    description
                 ).build()
-                else -> ShortTextComplicationData.Builder(
-                    text, PlainComplicationText.Builder("耳机电量").build()
-                ).build()
+                else -> ShortTextComplicationData.Builder(text, description)
+                    .setTitle(title).build()
             }
         } else {
             NoDataComplicationData()
@@ -51,18 +52,23 @@ class HeadsetBatteryComplicationService : ComplicationDataSourceService() {
         listener.onComplicationData(data)
     }
 
-    private fun readBattery(): Int {
+    private fun readBattery(): BatteryReading? {
         return try {
             val prefs = getSharedPreferences("headset_battery", MODE_PRIVATE)
             val right = prefs.getInt("right", -1)
             val left = prefs.getInt("left", -1)
+            val overall = prefs.getInt("overall", -1)
             when {
-                right >= 0 -> right
-                left >= 0 -> left
-                else -> -1
+                right in 0..100 -> BatteryReading(right, "右耳")
+                left in 0..100 -> BatteryReading(left, "左耳")
+                overall in 0..100 -> BatteryReading(overall, "整机")
+                else -> null
             }
         } catch (_: Exception) {
-            -1
+            null
         }
     }
+
+    private data class BatteryReading(val percent: Int, val label: String)
+
 }
