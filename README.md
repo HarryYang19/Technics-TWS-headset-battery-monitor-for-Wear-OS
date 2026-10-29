@@ -2,7 +2,7 @@
 
 Standalone Wear OS app for Samsung Galaxy Watch5 Pro, targeted at Technics EAH-AZ60 and EAH-AZ60M2 earbuds. No phone companion or phone-to-watch battery relay is used.
 
-## What changed Compared to HeadsetBatteryWatch
+## What changed Compared to [HeadsetBatteryWatch](https://github.com/HarryYang19/HeadsetBatteryWatch)
 
 - Replaced the non-existent `BluetoothDevice.getBatteryLevel()` compile-time call.
 - Tries direct Bluetooth Classic RFCOMM to the paired AZ60 using the Technics/Airoha UUID, then standard SPP UUID; Android performs SDP lookup rather than hardcoding an RFCOMM channel.
