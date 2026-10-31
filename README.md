@@ -1,8 +1,7 @@
 # HeadsetBatteryWatch — Technics EAH-AZ Live Tile
 
 **Source version: 1.8 (versionCode 10).**
-
-##Caution：该应用界面为简体中文
+Caution：该应用界面为简体中文
 
 ## What changed in v1.9 (UI-only)
 
