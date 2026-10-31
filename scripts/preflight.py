@@ -117,8 +117,22 @@ def main() -> int:
             "Tile Bluetooth read must be cancelled when the user leaves the card")
     require('android:description="@string/tile_description"' in manifest,
             "Tile service description must reference a string resource")
+    require('android:icon="@mipmap/ic_launcher"' in manifest and
+            'android:roundIcon="@mipmap/ic_launcher_round"' in manifest,
+            "launcher icon and round icon must be registered in the application manifest")
+    require((APP / "src/main/res/mipmap-anydpi-v26/ic_launcher.xml").is_file() and
+            (APP / "src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml").is_file() and
+            (APP / "src/main/res/drawable-nodpi/ic_launcher_foreground.png").is_file(),
+            "adaptive launcher icon resources are incomplete")
+    require("setVerticalAlignment(LayoutElementBuilders.VERTICAL_ALIGN_CENTER)" in tile and
+            "setHeight(DimensionBuilders.wrap())" in tile,
+            "Tile content must be vertically centered using a wrap-height content column")
+    require("环境声音控制" in tile and "ActionBuilders.launchAction(ComponentName(this, MainActivity::class.java))" in tile,
+            "Tile environment-sound button must launch the main Activity")
+    require("dp(24)" in main and "spacedParams(210, 46" in main and "panel(Color.rgb" in main,
+            "main UI must use round-screen dp sizing, compact battery cards and a balanced refresh button")
 
-    print("Preflight passed: stale Complication sources removed; Wear Tile, RACE battery, ANC gates, manifest and workflow validated.")
+    print("Preflight passed: Tile alignment/action, round-screen UI, launcher assets, RACE battery, ANC gates, manifest and workflow validated.")
     return 0
 
 

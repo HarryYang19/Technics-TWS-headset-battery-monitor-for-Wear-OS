@@ -1,7 +1,10 @@
 package com.example.headsetbattery
 
 import android.bluetooth.BluetoothSocket
+import android.content.ComponentName
 import android.graphics.Color
+import androidx.wear.protolayout.ActionBuilders
+import androidx.wear.protolayout.ColorBuilders
 import androidx.wear.protolayout.DimensionBuilders
 import androidx.wear.protolayout.LayoutElementBuilders
 import androidx.wear.protolayout.ModifiersBuilders
@@ -164,30 +167,93 @@ class BatteryTileService : TileService() {
             lines.add(text(shortError(result.status), 10f))
         }
 
+        // A natural-height Column inside a full-size Box allows the renderer to center the
+        // complete content stack in the watch's usable circular viewport (instead of pinning
+        // the first line to the top edge of an expanded Column).
         val columnBuilder = LayoutElementBuilders.Column.Builder()
+            .setWidth(DimensionBuilders.expand())
+            .setHeight(DimensionBuilders.wrap())
+            .setHorizontalAlignment(LayoutElementBuilders.HORIZONTAL_ALIGN_CENTER)
+
+        lines.forEach { columnBuilder.addContent(it) }
+        columnBuilder.addContent(
+            LayoutElementBuilders.Spacer.Builder()
+                .setWidth(DimensionBuilders.dp(1f))
+                .setHeight(DimensionBuilders.dp(9f))
+                .build()
+        )
+        columnBuilder.addContent(environmentControlButton())
+
+        val root = LayoutElementBuilders.Box.Builder()
             .setWidth(DimensionBuilders.expand())
             .setHeight(DimensionBuilders.expand())
             .setHorizontalAlignment(LayoutElementBuilders.HORIZONTAL_ALIGN_CENTER)
+            .setVerticalAlignment(LayoutElementBuilders.VERTICAL_ALIGN_CENTER)
             .setModifiers(
                 ModifiersBuilders.Modifiers.Builder()
                     .setPadding(
                         ModifiersBuilders.Padding.Builder()
-                            .setStart(DimensionBuilders.dp(16f))
-                            .setEnd(DimensionBuilders.dp(16f))
-                            .setTop(DimensionBuilders.dp(20f))
-                            .setBottom(DimensionBuilders.dp(20f))
+                            .setStart(DimensionBuilders.dp(12f))
+                            .setEnd(DimensionBuilders.dp(12f))
+                            .setTop(DimensionBuilders.dp(8f))
+                            .setBottom(DimensionBuilders.dp(8f))
                             .build()
                     )
                     .build()
             )
-
-        lines.forEach { columnBuilder.addContent(it) }
+            .addContent(columnBuilder.build())
+            .build()
 
         return TileBuilders.Tile.Builder()
             .setResourcesVersion(RESOURCE_VERSION)
             // No background polling. Opening/entering the Tile triggers the next fresh read.
             .setFreshnessIntervalMillis(0L)
-            .setTileTimeline(TimelineBuilders.Timeline.fromLayoutElement(columnBuilder.build()))
+            .setTileTimeline(TimelineBuilders.Timeline.fromLayoutElement(root))
+            .build()
+    }
+
+    private fun environmentControlButton(): LayoutElementBuilders.Box {
+        val click = ModifiersBuilders.Clickable.Builder()
+            .setOnClick(ActionBuilders.launchAction(ComponentName(this, MainActivity::class.java)))
+            .build()
+        val modifiers = ModifiersBuilders.Modifiers.Builder()
+            .setBackground(
+                ModifiersBuilders.Background.Builder()
+                    .setColor(ColorBuilders.argb(Color.rgb(24, 88, 64)))
+                    .setCorner(
+                        ModifiersBuilders.Corner.Builder()
+                            .setRadius(DimensionBuilders.dp(18f))
+                            .build()
+                    )
+                    .build()
+            )
+            .setPadding(
+                ModifiersBuilders.Padding.Builder()
+                    .setStart(DimensionBuilders.dp(18f))
+                    .setEnd(DimensionBuilders.dp(18f))
+                    .setTop(DimensionBuilders.dp(8f))
+                    .setBottom(DimensionBuilders.dp(8f))
+                    .build()
+            )
+            .setClickable(click)
+            .build()
+        val label = LayoutElementBuilders.Text.Builder()
+            .setText("环境声音控制")
+            .setFontStyle(
+                LayoutElementBuilders.FontStyle.Builder()
+                    .setSize(DimensionBuilders.sp(12f))
+                    .setColor(ColorBuilders.argb(Color.WHITE))
+                    .build()
+            )
+            .setMaxLines(1)
+            .build()
+        return LayoutElementBuilders.Box.Builder()
+            .setWidth(DimensionBuilders.dp(194f))
+            .setHeight(DimensionBuilders.dp(46f))
+            .setHorizontalAlignment(LayoutElementBuilders.HORIZONTAL_ALIGN_CENTER)
+            .setVerticalAlignment(LayoutElementBuilders.VERTICAL_ALIGN_CENTER)
+            .setModifiers(modifiers)
+            .addContent(label)
             .build()
     }
 

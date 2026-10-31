@@ -5,6 +5,8 @@
     <application
         android:allowBackup="false"
         android:label="耳机电量"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@android:style/Theme.Material.NoActionBar"
         android:supportsRtl="true">
         <activity

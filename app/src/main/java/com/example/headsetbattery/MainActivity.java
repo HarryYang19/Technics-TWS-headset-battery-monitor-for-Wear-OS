@@ -109,24 +109,30 @@ public class MainActivity extends Activity {
     }
 
     private void buildUi() {
+        // Round-screen safe layout: keep the information column inside the circular viewport.
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
         root.setGravity(Gravity.CENTER);
-        root.setPadding(16, 10, 16, 10);
+        root.setPadding(dp(24), dp(8), dp(24), dp(8));
         root.setBackgroundColor(Color.BLACK);
 
-        TextView title = text("Technics 耳机电量", 18, Color.WHITE, true);
-        subtitle = text("正在准备…", 10, Color.LTGRAY, false);
-        deviceLabel = text("未连接设备", 9, Color.GRAY, false);
+        TextView title = text("Technics 耳机电量", 19, Color.WHITE, true);
+        subtitle = text("正在准备…", 9, Color.LTGRAY, false);
+        subtitle.setMaxLines(2);
+        deviceLabel = text("未连接设备", 8, Color.GRAY, false);
+        deviceLabel.setSingleLine(true);
+        deviceLabel.setEllipsize(android.text.TextUtils.TruncateAt.END);
 
         LinearLayout batteryRow = new LinearLayout(this);
         batteryRow.setOrientation(LinearLayout.HORIZONTAL);
         batteryRow.setGravity(Gravity.CENTER);
+        batteryRow.setBaselineAligned(false);
         leftValue = batteryColumn(batteryRow, "左耳");
         rightValue = batteryColumn(batteryRow, "右耳");
         caseValue = batteryColumn(batteryRow, "充电盒");
 
-        modeStatus = text("环境声模式：等待设备协议确认", 10, Color.LTGRAY, false);
+        modeStatus = text("环境声模式：等待设备协议确认", 9, Color.LTGRAY, false);
+        modeStatus.setMaxLines(2);
         LinearLayout modeRow = new LinearLayout(this);
         modeRow.setOrientation(LinearLayout.HORIZONTAL);
         modeRow.setGravity(Gravity.CENTER);
@@ -135,22 +141,24 @@ public class MainActivity extends Activity {
         ambientButton = modeButton(modeRow, "通透", 2);
         setNoiseButtonsEnabled(false, -1);
 
-        refreshButton = text("点按刷新电量", 12, Color.WHITE, true);
+        refreshButton = text("刷新电量", 12, Color.WHITE, true);
         refreshButton.setGravity(Gravity.CENTER);
-        refreshButton.setPadding(12, 10, 12, 10);
-        refreshButton.setBackground(pill(Color.rgb(42, 42, 42)));
+        refreshButton.setMinHeight(dp(46));
+        refreshButton.setPadding(dp(12), dp(8), dp(12), dp(8));
+        refreshButton.setBackground(pill(Color.rgb(34, 42, 40)));
         refreshButton.setOnClickListener(v -> refresh());
 
-        TextView foot = text("本页面前台自动刷新；Tile 进入时独立实时读取", 8, Color.DKGRAY, false);
+        TextView foot = text("进入页面自动读取 · 点按可刷新", 7, Color.DKGRAY, false);
+        foot.setMaxLines(1);
 
-        root.addView(title, params(-1, -2));
-        root.addView(subtitle, params(-1, -2));
-        root.addView(deviceLabel, params(-1, -2));
-        root.addView(batteryRow, params(-1, -2));
-        root.addView(modeStatus, params(-1, -2));
-        root.addView(modeRow, params(-1, -2));
-        root.addView(refreshButton, params(-1, -2));
-        root.addView(foot, params(-1, -2));
+        root.addView(title, spacedParams(-1, -2, 0, 1));
+        root.addView(subtitle, spacedParams(-1, -2, 0, 0));
+        root.addView(deviceLabel, spacedParams(-1, -2, 0, 5));
+        root.addView(batteryRow, spacedParams(-1, 70, 0, 5));
+        root.addView(modeStatus, spacedParams(-1, -2, 1, 2));
+        root.addView(modeRow, spacedParams(-1, 40, 1, 4));
+        root.addView(refreshButton, spacedParams(210, 46, 2, 3));
+        root.addView(foot, spacedParams(-1, -2, 1, 0));
         setContentView(root);
     }
 
@@ -158,21 +166,28 @@ public class MainActivity extends Activity {
         LinearLayout col = new LinearLayout(this);
         col.setOrientation(LinearLayout.VERTICAL);
         col.setGravity(Gravity.CENTER);
-        col.setPadding(2, 10, 2, 7);
-        TextView value = text("--%", 22, Color.rgb(74, 222, 128), true);
+        col.setPadding(dp(2), dp(5), dp(2), dp(5));
+        col.setBackground(panel(Color.rgb(16, 23, 21)));
+
+        TextView value = text("--%", 21, Color.rgb(74, 222, 128), true);
         TextView caption = text(label, 9, Color.LTGRAY, false);
         col.addView(value, params(-2, -2));
         col.addView(caption, params(-2, -2));
-        parent.addView(col, new LinearLayout.LayoutParams(0, -2, 1));
+
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, dp(70), 1f);
+        lp.setMargins(dp(3), 0, dp(3), 0);
+        parent.addView(col, lp);
         return value;
     }
 
     private TextView modeButton(LinearLayout parent, String label, int mode) {
-        TextView button = text(label, 11, Color.WHITE, true);
-        button.setPadding(8, 9, 8, 9);
-        button.setBackground(pill(Color.rgb(55, 55, 55)));
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, -2, 1f);
-        lp.setMargins(3, 4, 3, 4);
+        TextView button = text(label, 10, Color.WHITE, true);
+        button.setGravity(Gravity.CENTER);
+        button.setPadding(dp(4), dp(7), dp(4), dp(7));
+        button.setMinHeight(dp(40));
+        button.setBackground(pill(Color.rgb(42, 48, 46)));
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, dp(40), 1f);
+        lp.setMargins(dp(3), 0, dp(3), 0);
         parent.addView(button, lp);
         button.setOnClickListener(v -> setNoiseMode(mode));
         return button;
@@ -181,8 +196,16 @@ public class MainActivity extends Activity {
     private GradientDrawable pill(int color) {
         GradientDrawable bg = new GradientDrawable();
         bg.setColor(color);
-        bg.setCornerRadius(40f);
-        bg.setStroke(1, Color.rgb(90, 90, 90));
+        bg.setCornerRadius(dp(22));
+        bg.setStroke(dp(1), Color.rgb(67, 78, 74));
+        return bg;
+    }
+
+    private GradientDrawable panel(int color) {
+        GradientDrawable bg = new GradientDrawable();
+        bg.setColor(color);
+        bg.setCornerRadius(dp(17));
+        bg.setStroke(dp(1), Color.rgb(34, 48, 43));
         return bg;
     }
 
@@ -192,12 +215,26 @@ public class MainActivity extends Activity {
         t.setTextColor(color);
         t.setTextSize(size);
         t.setGravity(Gravity.CENTER);
+        t.setIncludeFontPadding(false);
         if (bold) t.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
         return t;
     }
 
-    private LinearLayout.LayoutParams params(int w, int h) {
+    private int dp(float value) {
+        return (int) (value * getResources().getDisplayMetrics().density + 0.5f);
+    }
+
+    private LinearLayout.LayoutParams params(int width, int height) {
+        int w = width > 0 ? dp(width) : width;
+        int h = height > 0 ? dp(height) : height;
         return new LinearLayout.LayoutParams(w, h);
+    }
+
+    private LinearLayout.LayoutParams spacedParams(int width, int height, int top, int bottom) {
+        LinearLayout.LayoutParams lp = params(width, height);
+        lp.topMargin = dp(top);
+        lp.bottomMargin = dp(bottom);
+        return lp;
     }
 
     private boolean hasBluetoothPermission() {

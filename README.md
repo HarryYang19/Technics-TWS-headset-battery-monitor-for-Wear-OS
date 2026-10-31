@@ -1,6 +1,15 @@
 # HeadsetBatteryWatch — Technics EAH-AZ Live Tile
 
-**Source version: 1.7 (versionCode 8).**
+**Source version: 1.8 (versionCode 9).**
+
+## What changed in v1.8 (UI-only)
+
+- Rebuilt the Tile content as a natural-height vertical stack inside a full-size ProtoLayout `Box`, with explicit horizontal and vertical center alignment. This avoids the previous expanded `Column` placing all text at the top edge.
+- Added a rounded green **环境声音控制** Tile button. It uses a ProtoLayout `Clickable` + `LaunchAction` to open the existing exported `MainActivity` only; it does not send ANC commands or alter Bluetooth behavior.
+- Rebalanced the main screen for round watch displays: density-aware `dp` measurements, compact individual battery cards, larger touch targets for the three noise-mode controls, and a centered 210 × 46 dp refresh button.
+- Added a custom black / silver earbud / mint battery launcher icon in density-specific mipmaps and Android adaptive/round icon resources.
+- No RACE packet, Bluetooth connection, refresh lifecycle, device matching, ANC state gate, or command implementation was changed.
+
 
 A standalone Wear OS app for reading Technics EAH-AZ true-wireless earbud battery levels directly from the watch. No phone companion, phone relay, or cloud service is used.
 
@@ -77,7 +86,7 @@ The workflow is `.github/workflows/build-apk.yml`.
 - Kotlin Gradle Plugin 2.2.20
 - Gradle 8.11.1
 
-Run **Actions → Build Wear OS APK → Run workflow**. Download the artifact named `HeadsetBatteryWatch-Technics-Live-Tile-v1.7-debug-apk`; the APK is `app-debug.apk`.
+Run **Actions → Build Wear OS APK → Run workflow**. Download the artifact named `HeadsetBatteryWatch-Technics-Live-Tile-v1.8-debug-apk`; the APK is `app-debug.apk`.
 
 ## Validation notes
 
