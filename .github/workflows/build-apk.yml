@@ -3,7 +3,7 @@ name: Build Wear OS APK
 on:
   workflow_dispatch:
   push:
-    branches: [ New-UI-test ]
+    branches: [ main ]
 
 permissions:
   contents: read
@@ -36,14 +36,16 @@ jobs:
           gradle-version: '8.11.1'
           cache-provider: basic
 
+      - name: Remove obsolete Complication sources and run preflight
+        run: python3 scripts/preflight.py
+
       - name: Build debug APK
         run: gradle --no-daemon clean assembleDebug --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v7
         with:
-          name: HeadsetBatteryWatch-Technics-Live-Tile-v1.8-debug-apk
+          name: HeadsetBatteryWatch-Technics-Live-Tile-v1.9-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
-
