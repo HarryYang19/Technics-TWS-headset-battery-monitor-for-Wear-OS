@@ -1,8 +1,8 @@
 # HeadsetBatteryWatch — Technics EAH-AZ Live Tile
 
-**Source version: 1.8 (versionCode 9).**
+**Source version: 1.8 (versionCode 10).**
 
-## What changed in v1.8 (UI-only)
+## What changed in v1.9 (UI-only)
 
 - Rebuilt the Tile content as a natural-height vertical stack inside a full-size ProtoLayout `Box`, with explicit horizontal and vertical center alignment. This avoids the previous expanded `Column` placing all text at the top edge.
 - Added a rounded green **环境声音控制** Tile button. It uses a ProtoLayout `Clickable` + `LaunchAction` to open the existing exported `MainActivity` only; it does not send ANC commands or alter Bluetooth behavior.
@@ -86,7 +86,7 @@ The workflow is `.github/workflows/build-apk.yml`.
 - Kotlin Gradle Plugin 2.2.20
 - Gradle 8.11.1
 
-Run **Actions → Build Wear OS APK → Run workflow**. Download the artifact named `HeadsetBatteryWatch-Technics-Live-Tile-v1.8-debug-apk`; the APK is `app-debug.apk`.
+Run **Actions → Build Wear OS APK → Run workflow**. Download the artifact named `HeadsetBatteryWatch-Technics-Live-Tile-v1.9-debug-apk`; the APK is `app-debug.apk`.
 
 ## Validation notes
 

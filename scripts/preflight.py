@@ -129,8 +129,11 @@ def main() -> int:
             "Tile content must be vertically centered using a wrap-height content column")
     require("环境声音控制" in tile and "ActionBuilders.launchAction(ComponentName(this, MainActivity::class.java))" in tile,
             "Tile environment-sound button must launch the main Activity")
-    require("dp(24)" in main and "spacedParams(210, 46" in main and "panel(Color.rgb" in main,
-            "main UI must use round-screen dp sizing, compact battery cards and a balanced refresh button")
+    require("dp(40)" in main and "spacedParams(160, 38" in main and
+            "new LinearLayout.LayoutParams(0, dp(56), 1f)" in main and
+            'text("--%", 16' in main and 'text("刷新电量", 10' in main and
+            "panel(Color.rgb" in main,
+            "main UI must use compact Galaxy Watch round-screen dimensions")
 
     print("Preflight passed: Tile alignment/action, round-screen UI, launcher assets, RACE battery, ANC gates, manifest and workflow validated.")
     return 0

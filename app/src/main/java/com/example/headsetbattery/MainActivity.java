@@ -113,13 +113,15 @@ public class MainActivity extends Activity {
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
         root.setGravity(Gravity.CENTER);
-        root.setPadding(dp(24), dp(8), dp(24), dp(8));
+        root.setPadding(dp(40), dp(10), dp(40), dp(10));
         root.setBackgroundColor(Color.BLACK);
 
-        TextView title = text("Technics 耳机电量", 19, Color.WHITE, true);
-        subtitle = text("正在准备…", 9, Color.LTGRAY, false);
+        TextView title = text("Technics 耳机电量", 15, Color.WHITE, true);
+        title.setSingleLine(true);
+        title.setEllipsize(android.text.TextUtils.TruncateAt.END);
+        subtitle = text("正在准备…", 8, Color.LTGRAY, false);
         subtitle.setMaxLines(2);
-        deviceLabel = text("未连接设备", 8, Color.GRAY, false);
+        deviceLabel = text("未连接设备", 7, Color.GRAY, false);
         deviceLabel.setSingleLine(true);
         deviceLabel.setEllipsize(android.text.TextUtils.TruncateAt.END);
 
@@ -131,7 +133,7 @@ public class MainActivity extends Activity {
         rightValue = batteryColumn(batteryRow, "右耳");
         caseValue = batteryColumn(batteryRow, "充电盒");
 
-        modeStatus = text("环境声模式：等待设备协议确认", 9, Color.LTGRAY, false);
+        modeStatus = text("环境声模式：等待设备协议确认", 8, Color.LTGRAY, false);
         modeStatus.setMaxLines(2);
         LinearLayout modeRow = new LinearLayout(this);
         modeRow.setOrientation(LinearLayout.HORIZONTAL);
@@ -141,23 +143,23 @@ public class MainActivity extends Activity {
         ambientButton = modeButton(modeRow, "通透", 2);
         setNoiseButtonsEnabled(false, -1);
 
-        refreshButton = text("刷新电量", 12, Color.WHITE, true);
+        refreshButton = text("刷新电量", 10, Color.WHITE, true);
         refreshButton.setGravity(Gravity.CENTER);
-        refreshButton.setMinHeight(dp(46));
-        refreshButton.setPadding(dp(12), dp(8), dp(12), dp(8));
+        refreshButton.setMinHeight(dp(38));
+        refreshButton.setPadding(dp(8), dp(5), dp(8), dp(5));
         refreshButton.setBackground(pill(Color.rgb(34, 42, 40)));
         refreshButton.setOnClickListener(v -> refresh());
 
-        TextView foot = text("进入页面自动读取 · 点按可刷新", 7, Color.DKGRAY, false);
+        TextView foot = text("进入页面自动读取 · 点按可刷新", 6, Color.DKGRAY, false);
         foot.setMaxLines(1);
 
         root.addView(title, spacedParams(-1, -2, 0, 1));
         root.addView(subtitle, spacedParams(-1, -2, 0, 0));
         root.addView(deviceLabel, spacedParams(-1, -2, 0, 5));
-        root.addView(batteryRow, spacedParams(-1, 70, 0, 5));
+        root.addView(batteryRow, spacedParams(-1, 56, 0, 4));
         root.addView(modeStatus, spacedParams(-1, -2, 1, 2));
-        root.addView(modeRow, spacedParams(-1, 40, 1, 4));
-        root.addView(refreshButton, spacedParams(210, 46, 2, 3));
+        root.addView(modeRow, spacedParams(-1, 34, 1, 3));
+        root.addView(refreshButton, spacedParams(160, 38, 2, 2));
         root.addView(foot, spacedParams(-1, -2, 1, 0));
         setContentView(root);
     }
@@ -166,28 +168,28 @@ public class MainActivity extends Activity {
         LinearLayout col = new LinearLayout(this);
         col.setOrientation(LinearLayout.VERTICAL);
         col.setGravity(Gravity.CENTER);
-        col.setPadding(dp(2), dp(5), dp(2), dp(5));
+        col.setPadding(dp(2), dp(3), dp(2), dp(3));
         col.setBackground(panel(Color.rgb(16, 23, 21)));
 
-        TextView value = text("--%", 21, Color.rgb(74, 222, 128), true);
-        TextView caption = text(label, 9, Color.LTGRAY, false);
+        TextView value = text("--%", 16, Color.rgb(74, 222, 128), true);
+        TextView caption = text(label, 8, Color.LTGRAY, false);
         col.addView(value, params(-2, -2));
         col.addView(caption, params(-2, -2));
 
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, dp(70), 1f);
-        lp.setMargins(dp(3), 0, dp(3), 0);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, dp(56), 1f);
+        lp.setMargins(dp(2), 0, dp(2), 0);
         parent.addView(col, lp);
         return value;
     }
 
     private TextView modeButton(LinearLayout parent, String label, int mode) {
-        TextView button = text(label, 10, Color.WHITE, true);
+        TextView button = text(label, 9, Color.WHITE, true);
         button.setGravity(Gravity.CENTER);
-        button.setPadding(dp(4), dp(7), dp(4), dp(7));
-        button.setMinHeight(dp(40));
+        button.setPadding(dp(3), dp(4), dp(3), dp(4));
+        button.setMinHeight(dp(34));
         button.setBackground(pill(Color.rgb(42, 48, 46)));
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, dp(40), 1f);
-        lp.setMargins(dp(3), 0, dp(3), 0);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, dp(34), 1f);
+        lp.setMargins(dp(2), 0, dp(2), 0);
         parent.addView(button, lp);
         button.setOnClickListener(v -> setNoiseMode(mode));
         return button;
