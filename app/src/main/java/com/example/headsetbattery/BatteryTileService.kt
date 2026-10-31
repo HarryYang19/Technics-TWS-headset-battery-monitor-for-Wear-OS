@@ -163,7 +163,7 @@ class BatteryTileService : TileService() {
             lines.add(text(shortError(result.status), 10f))
         }
 
-        val column = LayoutElementBuilders.Column.Builder()
+        val columnBuilder = LayoutElementBuilders.Column.Builder()
             .setWidth(DimensionBuilders.expand())
             .setHeight(DimensionBuilders.expand())
             .setHorizontalAlignment(LayoutElementBuilders.HORIZONTAL_ALIGN_CENTER)
@@ -178,15 +178,15 @@ class BatteryTileService : TileService() {
                             .build()
                     )
                     .build()
-              )
+            )
 
-        lines.forEach { column.addContent(it) }
+        lines.forEach { columnBuilder.addContent(it) }
 
         return TileBuilders.Tile.Builder()
             .setResourcesVersion(RESOURCE_VERSION)
             // No background polling. Opening/entering the Tile triggers the next fresh read.
             .setFreshnessIntervalMillis(0L)
-            .setTileTimeline(TimelineBuilders.Timeline.fromLayoutElement(column.build()))
+            .setTileTimeline(TimelineBuilders.Timeline.fromLayoutElement(columnBuilder.build()))
             .build()
     }
 
