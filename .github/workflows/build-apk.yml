@@ -3,7 +3,7 @@ name: Build Wear OS APK
 on:
   workflow_dispatch:
   push:
-    branches: [ New-UI-test ]
+    branches: [ Original ]
 
 permissions:
   contents: read
