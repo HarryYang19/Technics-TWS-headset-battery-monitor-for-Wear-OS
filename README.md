@@ -2,6 +2,8 @@
 
 **Source version: 1.8 (versionCode 10).**
 
+##Caution：该应用界面为简体中文
+
 ## What changed in v1.9 (UI-only)
 
 - Rebuilt the Tile content as a natural-height vertical stack inside a full-size ProtoLayout `Box`, with explicit horizontal and vertical center alignment. This avoids the previous expanded `Column` placing all text at the top edge.
@@ -71,25 +73,3 @@ The main app can request Off / Noise Cancellation / Transparency. The app first 
 4. Add **耳机电量** from the watch's Tile carousel editor. On Samsung One UI Watch, edit the Tiles page and add the app Tile.
 5. Open the app screen or enter the Tile to trigger a live read. If no RACE response is received, the Tile reports the failure rather than showing a cached battery value.
 
-## Important when updating an existing GitHub repository
-
-Uploading this ZIP over an existing repository does not remove old files. That is why an earlier checkout may still contain `app/src/main/java/com/example/headsetbattery/HeadsetBatteryComplicationService.kt` even though this ZIP no longer contains it. Do not restore that file or add watch-face complication dependencies. The first preflight step automatically deletes leftover Java/Kotlin files with `Complication` in their filename before Gradle compilation, then verifies the source tree is Tile-only.
-
-## Build with GitHub Actions
-
-The workflow is `.github/workflows/build-apk.yml`.
-
-- JDK 17
-- Android SDK platform 35 and Build Tools 35.0.0 (the workflow installs only current package IDs; it does not request the obsolete `tools` package)
-- GitHub Actions: checkout v7, setup-java v6, setup-android v4, setup-gradle v6, upload-artifact v7
-- Android Gradle Plugin 8.9.2
-- Kotlin Gradle Plugin 2.2.20
-- Gradle 8.11.1
-
-Run **Actions → Build Wear OS APK → Run workflow**. Download the artifact named `HeadsetBatteryWatch-Technics-Live-Tile-v1.9-debug-apk`; the APK is `app-debug.apk`.
-
-## Validation notes
-
-The repository includes `scripts/preflight.py`, which first removes legacy watch-face Complication Kotlin/Java files left over from older ZIP uploads, then validates the manifest and string resources, SDK floor and target-SDK guard, Tile API dependency line, no-complication requirement, visible-entry live-read path, leave-event cancellation, request timeout, Bluetooth permission declarations, GitHub Actions versions, and expected RACE packet constants before Gradle starts.
-
-Static validation is not a substitute for compiling against the Android SDK or testing on physical watches. The source package should be considered a reviewed build candidate until the GitHub Actions Gradle build succeeds and the Tile has been tested on the actual watch. In particular, AZ60 battery and ANC behavior still needs confirmation against the user's AZ60 firmware and current Wear OS build.
