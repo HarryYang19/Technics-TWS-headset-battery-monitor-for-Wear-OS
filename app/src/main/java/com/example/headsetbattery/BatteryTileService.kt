@@ -153,7 +153,7 @@ class BatteryTileService : TileService() {
         lines.add(text("Technics · $model", 13f))
 
         if (result.live) {
-            lines.add(text("左耳 ${format(result.left)}   右耳 ${format(result.right)}", 17f))
+            lines.add(text("左耳/L ${format(result.left)}   右耳/R ${format(result.right)}", 17f))
             lines.add(text("充电盒 ${format(result.box)}", 15f))
             lines.add(text("刚刚从耳机实时读取", 10f))
         } else {
@@ -166,6 +166,20 @@ class BatteryTileService : TileService() {
         val column = LayoutElementBuilders.Column.Builder()
             .setWidth(DimensionBuilders.expand())
             .setHeight(DimensionBuilders.expand())
+            .setHorizontalAlignment(LayoutElementBuilders.HORIZONTAL_ALIGN_CENTER)
+            .setModifiers(
+                ModifiersBuilders.Modifiers.Builder()
+                    .setPadding(
+                        ModifiersBuilders.Padding.Builder()
+                            .setStart(DimensionBuilders.dp(16f))
+                            .setEnd(DimensionBuilders.dp(16f))
+                            .setTop(DimensionBuilders.dp(20f))
+                            .setBottom(DimensionBuilders.dp(20f))
+                            .build()
+                    )
+                    .build()
+              )
+
         lines.forEach { column.addContent(it) }
 
         return TileBuilders.Tile.Builder()
