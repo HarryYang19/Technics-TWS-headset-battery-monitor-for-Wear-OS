@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tile_description">进入信息卡片时实时读取 Technics 耳机电量</string>
+</resources>
