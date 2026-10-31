@@ -129,11 +129,11 @@ public class MainActivity extends Activity {
         batteryRow.setOrientation(LinearLayout.HORIZONTAL);
         batteryRow.setGravity(Gravity.CENTER);
         batteryRow.setBaselineAligned(false);
-        leftValue = batteryColumn(batteryRow, "左耳");
-        rightValue = batteryColumn(batteryRow, "右耳");
+        leftValue = batteryColumn(batteryRow, "左耳/L");
+        rightValue = batteryColumn(batteryRow, "右耳/R");
         caseValue = batteryColumn(batteryRow, "充电盒");
 
-        modeStatus = text("环境声模式：等待设备协议确认", 8, Color.LTGRAY, false);
+        modeStatus = text("环境声模式：等待设备协议确认", 9, Color.LTGRAY, false);
         modeStatus.setMaxLines(2);
         LinearLayout modeRow = new LinearLayout(this);
         modeRow.setOrientation(LinearLayout.HORIZONTAL);
@@ -143,7 +143,7 @@ public class MainActivity extends Activity {
         ambientButton = modeButton(modeRow, "通透", 2);
         setNoiseButtonsEnabled(false, -1);
 
-        refreshButton = text("刷新电量", 10, Color.WHITE, true);
+        refreshButton = text("刷新电量", 13, Color.WHITE, true);
         refreshButton.setGravity(Gravity.CENTER);
         refreshButton.setMinHeight(dp(38));
         refreshButton.setPadding(dp(8), dp(5), dp(8), dp(5));
@@ -172,7 +172,7 @@ public class MainActivity extends Activity {
         col.setBackground(panel(Color.rgb(16, 23, 21)));
 
         TextView value = text("--%", 16, Color.rgb(74, 222, 128), true);
-        TextView caption = text(label, 8, Color.LTGRAY, false);
+        TextView caption = text(label, 11, Color.LTGRAY, false);
         col.addView(value, params(-2, -2));
         col.addView(caption, params(-2, -2));
 
@@ -183,7 +183,7 @@ public class MainActivity extends Activity {
     }
 
     private TextView modeButton(LinearLayout parent, String label, int mode) {
-        TextView button = text(label, 9, Color.WHITE, true);
+        TextView button = text(label, 12, Color.WHITE, true);
         button.setGravity(Gravity.CENTER);
         button.setPadding(dp(3), dp(4), dp(3), dp(4));
         button.setMinHeight(dp(34));
