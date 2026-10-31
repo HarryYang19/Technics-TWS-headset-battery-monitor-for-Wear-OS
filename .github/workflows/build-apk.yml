@@ -36,9 +36,6 @@ jobs:
           gradle-version: '8.11.1'
           cache-provider: basic
 
-      - name: Remove obsolete Complication sources and run preflight
-        run: python3 scripts/preflight.py
-
       - name: Build debug APK
         run: gradle --no-daemon clean assembleDebug --stacktrace
 
