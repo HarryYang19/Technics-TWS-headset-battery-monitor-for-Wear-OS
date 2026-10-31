@@ -1,8 +1,13 @@
 # HeadsetBatteryWatch — Technics EAH-AZ Live Tile
 
-**Source version: 1.6 (versionCode 7).**
+**Source version: 1.7 (versionCode 8).**
 
 A standalone Wear OS app for reading Technics EAH-AZ true-wireless earbud battery levels directly from the watch. No phone companion, phone relay, or cloud service is used.
+
+## What changed in v1.7
+
+- Fixed a repository-upgrade build failure: older uploads may leave `HeadsetBatteryComplicationService.kt` behind because GitHub does not delete files that are absent from an uploaded ZIP. This file imports `androidx.wear.watchface.*`, but the Tile-only project intentionally does not include watch-face complication libraries. The CI preflight now deletes every legacy Java/Kotlin source whose filename contains `Complication` before Gradle starts, and verifies that none remain. This is the root cause of the reported `Unresolved reference: watchface` / `ComplicationDataSourceService` errors; it is **not** caused by `minSdk 30` or Wear OS 3 compatibility.
+- No rewrite of the Bluetooth, Tile, or ANC implementation was needed for this compiler error.
 
 ## What changed in v1.6
 
@@ -57,6 +62,10 @@ The main app can request Off / Noise Cancellation / Transparency. The app first 
 4. Add **耳机电量** from the watch's Tile carousel editor. On Samsung One UI Watch, edit the Tiles page and add the app Tile.
 5. Open the app screen or enter the Tile to trigger a live read. If no RACE response is received, the Tile reports the failure rather than showing a cached battery value.
 
+## Important when updating an existing GitHub repository
+
+Uploading this ZIP over an existing repository does not remove old files. That is why an earlier checkout may still contain `app/src/main/java/com/example/headsetbattery/HeadsetBatteryComplicationService.kt` even though this ZIP no longer contains it. Do not restore that file or add watch-face complication dependencies. The first preflight step automatically deletes leftover Java/Kotlin files with `Complication` in their filename before Gradle compilation, then verifies the source tree is Tile-only.
+
 ## Build with GitHub Actions
 
 The workflow is `.github/workflows/build-apk.yml`.
@@ -68,10 +77,10 @@ The workflow is `.github/workflows/build-apk.yml`.
 - Kotlin Gradle Plugin 2.2.20
 - Gradle 8.11.1
 
-Run **Actions → Build Wear OS APK → Run workflow**. Download the artifact named `HeadsetBatteryWatch-Technics-Live-Tile-WearOS3-debug-apk`; the APK is `app-debug.apk`.
+Run **Actions → Build Wear OS APK → Run workflow**. Download the artifact named `HeadsetBatteryWatch-Technics-Live-Tile-v1.7-debug-apk`; the APK is `app-debug.apk`.
 
 ## Validation notes
 
-The repository includes `scripts/preflight.py`, which validates the manifest and string resources, SDK floor and target-SDK guard, Tile API dependency line, no-complication requirement, visible-entry live-read path, leave-event cancellation, request timeout, Bluetooth permission declarations, GitHub Actions versions, and expected RACE packet constants before Gradle starts.
+The repository includes `scripts/preflight.py`, which first removes legacy watch-face Complication Kotlin/Java files left over from older ZIP uploads, then validates the manifest and string resources, SDK floor and target-SDK guard, Tile API dependency line, no-complication requirement, visible-entry live-read path, leave-event cancellation, request timeout, Bluetooth permission declarations, GitHub Actions versions, and expected RACE packet constants before Gradle starts.
 
 Static validation is not a substitute for compiling against the Android SDK or testing on physical watches. The source package should be considered a reviewed build candidate until the GitHub Actions Gradle build succeeds and the Tile has been tested on the actual watch. In particular, AZ60 battery and ANC behavior still needs confirmation against the user's AZ60 firmware and current Wear OS build.

@@ -12,8 +12,8 @@ android {
         // Wear OS 3 starts from Android 11 / API 30 (e.g. Galaxy Watch4 generation).
         minSdk = 30
         targetSdk = 35
-        versionCode = 7
-        versionName = "1.6-wearos3-live-tile"
+        versionCode = 8
+        versionName = "1.7-live-tile-cleanup"
     }
 
     compileOptions {

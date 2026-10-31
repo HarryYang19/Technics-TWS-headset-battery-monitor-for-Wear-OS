@@ -20,7 +20,29 @@ def require(condition: bool, message: str) -> None:
         raise AssertionError(message)
 
 
+def remove_legacy_complication_sources() -> list[Path]:
+    """Delete the obsolete watch-face Complication service left by older repo uploads.
+
+    v1.6+ uses a Wear Tile only. GitHub uploads that overwrite existing files do not
+    delete files absent from the ZIP, so the old Kotlin source can otherwise remain
+    in app/src and be compiled against a project that intentionally has no watchface
+    complications dependency.
+    """
+    source_root = APP / "src"
+    removed: list[Path] = []
+    if source_root.exists():
+        for path in source_root.rglob("*"):
+            if path.is_file() and path.suffix.lower() in {".kt", ".java"} and "complication" in path.name.lower():
+                path.unlink()
+                removed.append(path)
+    return removed
+
+
 def main() -> int:
+    removed_legacy = remove_legacy_complication_sources()
+    for old_source in removed_legacy:
+        print(f"Removed obsolete watch-face source: {old_source.relative_to(ROOT)}")
+
     for path in (MANIFEST, MAIN, READER, TILE, GRADLE, WORKFLOW):
         require(path.is_file(), f"missing required file: {path.relative_to(ROOT)}")
 
@@ -71,8 +93,14 @@ def main() -> int:
             "permission callback must not launch a duplicate RFCOMM refresh while onResume is already reading")
     require("onPause()" in main and "activeSocket.getAndSet(null)" in main,
             "main screen must close its private RFCOMM session when leaving the battery screen")
+    remaining_complication_sources = [
+        p for p in (APP / "src").rglob("*")
+        if p.is_file() and p.suffix.lower() in {".kt", ".java"} and "complication" in p.name.lower()
+    ]
+    require(not remaining_complication_sources,
+            "obsolete watch-face Complication source remains after cleanup")
     require("Complication" not in manifest and "HeadsetBatteryComplication" not in main + tile,
-            "watch-face Complication module remains in the app source")
+            "watch-face Complication module remains in the active app source")
     require((APP / "src/main/res/values/strings.xml").is_file(), "Tile description string resource missing")
     ET.parse(APP / "src/main/res/values/strings.xml")
     require("android-actions/setup-android@v4" in workflow, "updated Android SDK setup action missing")
@@ -90,7 +118,7 @@ def main() -> int:
     require('android:description="@string/tile_description"' in manifest,
             "Tile service description must reference a string resource")
 
-    print("Preflight passed: Wear OS 3 floor, live Tile refresh, RACE battery, ANC gates, manifest and workflow.")
+    print("Preflight passed: stale Complication sources removed; Wear Tile, RACE battery, ANC gates, manifest and workflow validated.")
     return 0
 
 
